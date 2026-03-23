@@ -19,7 +19,7 @@ export class ComprasComponent {
   uidFirebase: string = 'demoUID';
 
   // 🔥 URL API (LOCAL por ahora)
-  apiUrl: string = 'https://asterplay.railway.app/compras';
+  apiUrl: string = 'rentavideojuegospeliculas-production.up.railway.app/compras';
 
   constructor(
     private fb: FormBuilder,
