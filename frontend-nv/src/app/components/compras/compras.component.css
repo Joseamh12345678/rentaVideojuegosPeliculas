@@ -1,0 +1,32 @@
+.gaming-bg {
+  background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
+  min-height: 100vh;
+}
+
+.gaming-card {
+  background: rgba(0, 0, 0, 0.8);
+  border: 1px solid #00ffcc;
+  border-radius: 12px;
+}
+
+.gaming-input {
+  background: #1c1c1c;
+  color: #fff;
+  border: 1px solid #00ffcc;
+}
+
+.gaming-btn {
+  background: #00ffcc;
+  color: black;
+  font-weight: bold;
+}
+
+.title-glow {
+  text-shadow: 0 0 10px #00ffcc;
+}
+
+label {
+  color: #00ffcc;
+  font-weight: bold;
+  text-shadow: 0 0 5px #00ffcc;
+}

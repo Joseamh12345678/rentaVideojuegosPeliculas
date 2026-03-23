@@ -1,0 +1,50 @@
+<div class="gaming-bg">
+
+  <div class="container py-4 text-light">
+
+    <!-- BOTÓN REGRESAR -->
+    <button class="btn btn-outline-light mb-3" (click)="regresar()">
+      ⬅️ Volver a usuarios
+    </button>
+
+    <h2 class="title-glow mb-4">🕹️ Registro de Compras</h2>
+
+    <div class="card gaming-card p-4 shadow">
+
+      <form [formGroup]="compraForm" (ngSubmit)="guardarCompra()">
+
+        <div class="row">
+
+          <div class="col-md-6 mb-3">
+            <label>Título del Juego</label>
+            <input type="text" class="form-control gaming-input" formControlName="tituloJuego">
+          </div>
+
+          <div class="col-md-6 mb-3">
+            <label>Precio</label>
+            <input type="number" class="form-control gaming-input" formControlName="precio">
+          </div>
+
+          <div class="col-md-6 mb-3">
+            <label>Método de Pago</label>
+            <select class="form-control gaming-input" formControlName="metodoPago">
+              <option value="">Selecciona</option>
+              <option>Tarjeta</option>
+              <option>PayPal</option>
+              <option>Efectivo</option>
+            </select>
+          </div>
+
+        </div>
+
+        <button class="btn gaming-btn w-100 mt-3">
+          💾 Guardar Compra
+        </button>
+
+      </form>
+
+    </div>
+
+  </div>
+
+</div>
