@@ -49,7 +49,7 @@ export class ComprasComponent {
 
       const datos = {
         uid: this.uidFirebase,
-        titulo_pelicula: form.tituloJuego,
+        titulo_videojuego: form.tituloJuego,
         precio: form.precio,
         metodo_pago: form.metodoPago
       };
