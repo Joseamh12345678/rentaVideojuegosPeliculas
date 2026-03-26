@@ -37,32 +37,12 @@ def crear_compra(compra: Compra):
         conn = conexion()
         cursor = conn.cursor()
 
-        # 🔍 Buscar usuario por UID
-        cursor.execute(
-            "SELECT id_usuario FROM usuarios WHERE uid_firebase = %s",
-            (compra.uid,)
-        )
-        row = cursor.fetchone()
-
-        # 👤 Si no existe, crearlo
-        if row:
-            id_usuario = row[0]
-        else:
-            cursor.execute("""
-                INSERT INTO usuarios (uid_firebase, correo, fecha_registro)
-                VALUES (%s, %s, NOW())
-                RETURNING id_usuario
-            """, (compra.uid, "sin_correo"))
-
-            id_usuario = cursor.fetchone()[0]
-            conn.commit()
-
-        # 💾 Insertar compra
+        # 💾 Insertar directamente (ya no usamos tabla usuarios aquí)
         cursor.execute("""
-            INSERT INTO compras (id_usuario, titulo_videojuego, precio, metodo_pago, fecha_compra)
+            INSERT INTO compras (uid, titulo_videojuego, precio, metodo_pago, fecha)
             VALUES (%s, %s, %s, %s, NOW())
         """, (
-            id_usuario,
+            compra.uid,
             compra.titulo_videojuego,
             compra.precio,
             compra.metodo_pago
@@ -76,8 +56,9 @@ def crear_compra(compra: Compra):
 
     except Exception as e:
         import traceback
-        print(traceback.format_exc())  # 🔥 para logs en Railway
+        print(traceback.format_exc())
         raise HTTPException(status_code=500, detail=str(e))
+
 
 # 🚀 INICIAR SERVIDOR
 if __name__ == "__main__":
