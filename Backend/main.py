@@ -62,7 +62,7 @@ def crear_compra(compra: Compra):
 
         # 💾 Insertar compra
         cursor.execute("""
-            INSERT INTO compra (id_usuario, titulo_videojuego, precio, metodo_pago, fecha_compra)
+            INSERT INTO compras (id_usuario, titulo_videojuego, precio, metodo_pago, fecha_compra)
             VALUES (%s, %s, %s, %s, NOW())
         """, (
             id_usuario,
