@@ -3,16 +3,15 @@ from pydantic import BaseModel
 from db import conexion
 
 from fastapi.middleware.cors import CORSMiddleware
-
 import os
 import uvicorn
 
 app = FastAPI()
 
-# 🔥 CORS para Angular
+# 🔥 CORS (permite que Angular se conecte)
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
+    allow_origins=["*"],  # luego puedes poner solo tu dominio
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -40,7 +39,7 @@ def crear_compra(compra: Compra):
 
         # 🔍 Buscar usuario por UID
         cursor.execute(
-            "SELECT id_usuario FROM Usuarios WHERE uid_firebase = ?",
+            "SELECT id_usuario FROM usuarios WHERE uid_firebase = %s",
             (compra.uid,)
         )
         row = cursor.fetchone()
@@ -50,13 +49,13 @@ def crear_compra(compra: Compra):
             id_usuario = row[0]
         else:
             cursor.execute("""
-                INSERT INTO Usuarios (uid_firebase, correo, fecha_registro)
-                VALUES (?, ?, GETDATE())
+                INSERT INTO usuarios (uid_firebase, correo, fecha_registro)
+                VALUES (%s, %s, NOW())
             """, (compra.uid, "sin_correo"))
             conn.commit()
 
             cursor.execute(
-                "SELECT id_usuario FROM Usuarios WHERE uid_firebase = ?",
+                "SELECT id_usuario FROM usuarios WHERE uid_firebase = %s",
                 (compra.uid,)
             )
             id_usuario = cursor.fetchone()[0]
@@ -64,7 +63,7 @@ def crear_compra(compra: Compra):
         # 💾 Insertar compra
         cursor.execute("""
             INSERT INTO compra (id_usuario, titulo_videojuego, precio, metodo_pago, fecha_compra)
-            VALUES (?, ?, ?, ?, GETDATE())
+            VALUES (%s, %s, %s, %s, NOW())
         """, (
             id_usuario,
             compra.titulo_videojuego,
