@@ -1,4 +1,4 @@
-from fastapi import FastAPI
+from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel
 from db import conexion
 
@@ -8,10 +8,10 @@ import uvicorn
 
 app = FastAPI()
 
-# 🔥 CORS (permite que Angular se conecte)
+# 🔥 CORS
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],  # luego puedes poner solo tu dominio
+    allow_origins=["*"],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -51,14 +51,11 @@ def crear_compra(compra: Compra):
             cursor.execute("""
                 INSERT INTO usuarios (uid_firebase, correo, fecha_registro)
                 VALUES (%s, %s, NOW())
+                RETURNING id_usuario
             """, (compra.uid, "sin_correo"))
-            conn.commit()
 
-            cursor.execute(
-                "SELECT id_usuario FROM usuarios WHERE uid_firebase = %s",
-                (compra.uid,)
-            )
             id_usuario = cursor.fetchone()[0]
+            conn.commit()
 
         # 💾 Insertar compra
         cursor.execute("""
@@ -72,15 +69,17 @@ def crear_compra(compra: Compra):
         ))
 
         conn.commit()
+        cursor.close()
         conn.close()
 
         return {"mensaje": "Compra registrada correctamente"}
 
     except Exception as e:
-        return {"error": str(e)}
+        import traceback
+        print(traceback.format_exc())  # 🔥 para logs en Railway
+        raise HTTPException(status_code=500, detail=str(e))
 
-
-# 🚀 INICIAR SERVIDOR (IMPORTANTE PARA RAILWAY)
+# 🚀 INICIAR SERVIDOR
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 8000))
     uvicorn.run(app, host="0.0.0.0", port=port)
